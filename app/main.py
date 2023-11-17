@@ -145,102 +145,102 @@ class Protocolo(Base):
 @app.route('/salas', methods=['GET'])
 def get_salas():
     Session = sessionmaker(bind=engine)
-    session = Session()
-    salas = session.query(Sala).all()
-    session.close()
+    Session = Session()
+    salas = Session.query(Sala).all()
+    Session.close()
     return jsonify([s.__dict__ for s in salas])
 
 @app.route('/salas', methods=['POST'])
 def create_sala():
     data = request.get_json()
     nova_sala = Sala(**data)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    session.add(nova_sala)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    Session.add(nova_sala)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Sala criada com sucesso!'}), 201
 
 @app.route('/salas/<int:id>', methods=['GET'])
 def get_sala(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    sala = session.query(Sala).filter_by(id=id).first()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    sala = Session.query(Sala).filter_by(id=id).first()
+    Session.close()
     return jsonify(sala.__dict__)
 
 @app.route('/salas/<int:id>', methods=['PUT'])
 def update_sala(id):
     data = request.get_json()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    sala = session.query(Sala).filter_by(id=id).first()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    sala = Session.query(Sala).filter_by(id=id).first()
     for key, value in data.items():
         setattr(sala, key, value)
-    session.commit()
-    session.close()
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Sala atualizada com sucesso!'})
 
 
 @app.route('/salas/<int:id>', methods=['DELETE'])
 def delete_sala(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    sala = session.query(Sala).filter_by(id=id).first()
-    session.delete(sala)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    sala = Session.query(Sala).filter_by(id=id).first()
+    Session.delete(sala)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Sala excluída com sucesso!'})
 
 ####### EQUIPAMENTO #######
 
 @app.route('/equipamentos', methods=['GET'])
 def get_equipamentos():
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    equipamentos = session.query(Equipamento).all()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    equipamentos = Session.query(Equipamento).all()
+    Session.close()
     return jsonify([e.__dict__ for e in equipamentos])
 
 @app.route('/equipamentos', methods=['POST'])
 def create_equipamento():
     data = request.get_json()
     novo_equipamento = Equipamento(**data) 
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    session.add(novo_equipamento)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    Session.add(novo_equipamento)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Equipamento criado com sucesso!'}), 201
 
 @app.route('/equipamentos/<int:id>', methods=['GET'])
 def get_equipamento(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    equipamento = session.query(Equipamento).filter_by(id=id).first()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    equipamento = Session.query(Equipamento).filter_by(id=id).first()
+    Session.close()
     return jsonify(equipamento.__dict__)
 
 @app.route('/equipamentos/<int:id>', methods=['PUT'])
 def update_equipamento(id):
     data = request.get_json()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    equipamento = session.query(Equipamento).filter_by(id=id).first()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    equipamento = Session.query(Equipamento).filter_by(id=id).first()
     for key, value in data.items():
         setattr(equipamento, key, value)
-    session.commit()
-    session.close()
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Equipamento atualizado com sucesso!'})
 
 @app.route('/equipamentos/<int:id>', methods=['DELETE'])
 def delete_equipamento(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    equipamento = session.query(Equipamento).filter_by(id=id).first()
-    session.delete(equipamento)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    equipamento = Session.query(Equipamento).filter_by(id=id).first()
+    Session.delete(equipamento)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Equipamento excluído com sucesso!'})
 
 ########### COMANDOS #####################
@@ -274,8 +274,8 @@ def get_comando(id):
 def add_comando():
     data = request.get_json()
     new_comando = Comandos(comando=data['comando'], descricao=data['descricao'], id_protocolo=data['id_protocolo'])
-    session.add(new_comando)
-    session.commit()
+    Session.add(new_comando)
+    Session.commit()
     return jsonify({'message': 'Comando criado com sucesso'})
 
 @app.route('/comandos/<id>', methods=['PUT'])
@@ -287,7 +287,7 @@ def update_comando(id):
     comando.comando = data['comando']
     comando.descricao = data['descricao']
     comando.id_protocolo = data['id_protocolo']
-    session.commit()
+    Session.commit()
     return jsonify({'message': 'Comando atualizado com sucesso'})
 
 @app.route('/comandos/<id>', methods=['DELETE'])
@@ -295,8 +295,8 @@ def delete_comando(id):
     comando = Comandos.query.get(id)
     if not comando:
         return jsonify({'message': 'Comando não encontrado'})
-    session.delete(comando)
-    session.commit()
+    Session.delete(comando)
+    Session.commit()
     return jsonify({'message': 'Comando excluído com sucesso'})
 
 
@@ -344,8 +344,8 @@ def add_agenda():
         hora_fim=data['hora_fim'],
         id_sala=data['id_sala']
     )
-    session.add(new_item)
-    session.commit()
+    Session.add(new_item)
+    Session.commit()
     return jsonify({'message': 'Item da agenda criado com sucesso'})
 
 @app.route('/agenda/<id>', methods=['PUT'])
@@ -359,7 +359,7 @@ def update_agenda(id):
     item.hora_inicio = data['hora_inicio']
     item.hora_fim = data['hora_fim']
     item.id_sala = data['id_sala']
-    session.commit()
+    Session.commit()
     return jsonify({'message': 'Item da agenda atualizado com sucesso'})
 
 @app.route('/agenda/<id>', methods=['DELETE'])
@@ -367,8 +367,8 @@ def delete_agenda(id):
     item = Agenda.query.get(id)
     if not item:
         return jsonify({'message': 'Item da agenda não encontrado'})
-    session.delete(item)
-    session.commit()
+    Session.delete(item)
+    Session.commit()
     return jsonify({'message': 'Item da agenda excluído com sucesso'})
 
 
@@ -377,51 +377,51 @@ def delete_agenda(id):
 
 @app.route('/logs', methods=['GET'])
 def get_logs():
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    logs = session.query(Logs).all()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    logs = Session.query(Logs).all()
+    Session.close()
     return jsonify([l.__dict__ for l in logs])
 
 @app.route('/logs', methods=['POST'])
 def create_log():
     data = request.get_json()
     novo_log = Logs(**data)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    session.add(novo_log)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    Session.add(novo_log)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Log criado com sucesso!'}), 201
 
 @app.route('/logs/<int:id>', methods=['GET'])
 def get_log_by_id(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    log = session.query(Logs).filter_by(id=id).first()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    log = Session.query(Logs).filter_by(id=id).first()
+    Session.close()
     return jsonify(log.__dict__)
 
 @app.route('/logs/<int:id>', methods=['PUT'])
 def update_log(id):
     data = request.get_json()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    log = session.query(Logs).filter_by(id=id).first()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    log = Session.query(Logs).filter_by(id=id).first()
     for key, value in data.items():
         setattr(log, key, value)
-    session.commit()
-    session.close()
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Log atualizado com sucesso!'})
 
 @app.route('/logs/<int:id>', methods=['DELETE'])
 def delete_log(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    log = session.query(Logs).filter_by(id=id).first()
-    session.delete(log)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    log = Session.query(Logs).filter_by(id=id).first()
+    Session.delete(log)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Log excluído com sucesso!'})
 
 
@@ -430,51 +430,51 @@ def delete_log(id):
 
 @app.route('/permissoes', methods=['GET'])
 def get_permissoes():
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    permissoes = session.query(Permissoes).all()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    permissoes = Session.query(Permissoes).all()
+    Session.close()
     return jsonify([p.__dict__ for p in permissoes])
 
 @app.route('/permissoes', methods=['POST'])
 def create_permissao():
     data = request.get_json()
     nova_permissao = Permissoes(**data)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    session.add(nova_permissao)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    Session.add(nova_permissao)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Permissão criada com sucesso!'}), 201
 
 @app.route('/permissoes/<int:id>', methods=['GET'])
 def get_permissao_by_id(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    permissao = session.query(Permissoes).filter_by(id=id).first()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    permissao = Session.query(Permissoes).filter_by(id=id).first()
+    Session.close()
     return jsonify(permissao.__dict__)
 
 @app.route('/permissoes/<int:id>', methods=['PUT'])
 def update_permissao(id):
     data = request.get_json()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    permissao = session.query(Permissoes).filter_by(id=id).first()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    permissao = Session.query(Permissoes).filter_by(id=id).first()
     for key, value in data.items():
         setattr(permissao, key, value)
-    session.commit()
-    session.close()
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Permissão atualizada com sucesso!'})
 
 @app.route('/permissoes/<int:id>', methods=['DELETE'])
 def delete_permissao(id):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    permissao = session.query(Permissoes).filter_by(id=id).first()
-    session.delete(permissao)
-    session.commit()
-    session.close()
+    Session = Sessionmaker(bind=engine)
+    Session = Session()
+    permissao = Session.query(Permissoes).filter_by(id=id).first()
+    Session.delete(permissao)
+    Session.commit()
+    Session.close()
     return jsonify({'message': 'Permissão excluída com sucesso!'})
 
 
@@ -525,8 +525,8 @@ def add_usuario():
         id_permissoes=data['id_permissoes'],
         id_logs=data['id_logs']
     )
-    session.add(new_usuario)
-    session.commit()
+    Session.add(new_usuario)
+    Session.commit()
     return jsonify({'message': 'Usuário criado com sucesso'})
 
 @app.route('/usuarios/<id>', methods=['PUT'])
@@ -541,7 +541,7 @@ def update_usuario(id):
     usuario.permissao = data['permissao']
     usuario.id_permissoes = data['id_permissoes']
     usuario.id_logs = data['id_logs']
-    session.commit()
+    Session.commit()
     return jsonify({'message': 'Usuário atualizado com sucesso'})
 
 @app.route('/usuarios/<id>', methods=['DELETE'])
@@ -549,8 +549,8 @@ def delete_usuario(id):
     usuario = Usuario.query.get(id)
     if not usuario:
         return jsonify({'message': 'Usuário não encontrado'})
-    session.delete(usuario)
-    session.commit()
+    Session.delete(usuario)
+    Session.commit()
     return jsonify({'message': 'Usuário excluído com sucesso'})
 
 
@@ -589,8 +589,8 @@ def add_relacao():
         id_sala=data['id_sala'],
         id_equipamento=data['id_equipamento']
     )
-    session.add(new_item)
-    session.commit()
+    Session.add(new_item)
+    Session.commit()
     return jsonify({'message': 'Relação criada com sucesso'})
 
 @app.route('/relacao/<id>', methods=['PUT'])
@@ -601,7 +601,7 @@ def update_relacao(id):
     data = request.get_json()
     item.id_sala = data['id_sala']
     item.id_equipamento = data['id_equipamento']
-    session.commit()
+    Session.commit()
     return jsonify({'message': 'Relação atualizada com sucesso'})
 
 @app.route('/relacao/<id>', methods=['DELETE'])
@@ -609,8 +609,8 @@ def delete_relacao(id):
     item = Relacao.query.get(id)
     if not item:
         return jsonify({'message': 'Relação não encontrada'})
-    session.delete(item)
-    session.commit()
+    Session.delete(item)
+    Session.commit()
     return jsonify({'message': 'Relação excluída com sucesso'})
 
 
@@ -650,8 +650,8 @@ def add_protocolo():
         descricao=data['descricao'],
         id_comando=data['id_comando']
     )
-    session.add(new_protocolo)
-    session.commit()
+    Session.add(new_protocolo)
+    Session.commit()
     return jsonify({'message': 'Protocolo criado com sucesso'})
 
 @app.route('/protocolo/<id>', methods=['PUT'])
@@ -662,7 +662,7 @@ def update_protocolo(id):
     data = request.get_json()
     protocolo.descricao = data['descricao']
     protocolo.id_comando = data['id_comando']
-    session.commit()
+    Session.commit()
     return jsonify({'message': 'Protocolo atualizado com sucesso'})
 
 @app.route('/protocolo/<id>', methods=['DELETE'])
@@ -670,8 +670,8 @@ def delete_protocolo(id):
     protocolo = Protocolo.query.get(id)
     if not protocolo:
         return jsonify({'message': 'Protocolo não encontrado'})
-    session.delete(protocolo)
-    session.commit()
+    Session.delete(protocolo)
+    Session.commit()
     return jsonify({'message': 'Protocolo excluído com sucesso'})
 
 
