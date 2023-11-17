@@ -1,0 +1,5 @@
+Flask
+flask-pydantic-spec 
+sqlalchemy 
+psycopg2-binary 
+configparser

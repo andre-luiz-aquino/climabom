@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: "postgresql://climabom:climabom@db:5432/climabom"  
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: climabom
+      POSTGRES_PASSWORD: climabom
+      POSTGRES_DB: climabom  
